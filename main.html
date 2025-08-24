@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Главное меню</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
+        .welcome { font-size: 28px; color: #007cba; }
+        .from-reg { color: green; }
+        button { 
+            padding: 12px 20px; 
+            background: #007cba; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 500; 
+            transition: background 0.3s; 
+        }
+
+        button:hover {
+            background: #005f8a; 
+        }
+        #exit{
+            position: fixed;        
+            top: 20px;              
+            right: 20px;            
+            z-index: 1000;          
+            font-size: 14px;        
+            padding: 10px 16px;      
+            background: #d32f2f;    
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: background 0.3s; 
+        }
+    </style>
+</head>
+<body>
+    <button id="exit" onclick="window.location.href='sign.php'">Выйти</button>
+    <div id="greeting"></div>
+    <p>Вы вошли в систему.</p>
+    <script>
+        const currentUser = <?php echo json_encode($_SESSION['login'] ?? '', JSON_UNESCAPED_UNICODE); ?>;
+        document.addEventListener("DOMContentLoaded", function() {
+            const greeting = document.createElement('h1');
+            greeting.textContent = "Приветствуем, " + currentUser + "!";
+            document.getElementById('greeting').appendChild(greeting);
+        });
+    </script>
+    
+    <h2>Список пользователей</h2>
+    <button id="participants" onclick="window.location.href='participants.php'">Вывести список пользователей</button>
+    <h2>Список моих книг</h2>
+    <button id="my_book" onclick="window.location.href='my_book.php'">Мои книги</button>
+    <h2>Список всех книг</h2>
+    <button id="book_list" onclick="window.location.href='book_list.php'">Открыть список</button>
+    <h2>Поиск пользователей</h2>
+    <button id="search_user" onclick="window.location.href='search_user.php'">Найти пользователь</button>
+    <h2>Поиск книг</h2>
+    <button id="search_book" onclick="window.location.href='search_book.php'">Найти книгу</button>
+</body>
+</html>

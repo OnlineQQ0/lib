@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваши книги</title>
+    <style>
+         body { 
+            font-family: Arial, sans-serif; 
+            max-width: 500px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            position: relative; 
+            min-height: 100vh; 
+            background-color: #f9f9f9; 
+            color: #333; 
+            text-align: center;
+            
+        }
+        h1,h2 { color: #007cba; 
+        
+        }
+        .back-btn {
+            padding: 10px 18px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+        .back-btn:hover {
+            background: #444;
+        }
+        button { 
+            padding: 12px 20px; 
+            background: #007cba; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 500; 
+            transition: background 0.3s; 
+        }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: center
+        }
+        label {
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 500; 
+            color: #444; 
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 60px;      
+        }
+        input[type="text"] {
+            width: 100%; 
+            padding: 12px; 
+            margin: 5px 0 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <button class="back-btn" onclick="window.location.href='main.php'">Вернуться</button>
+    
+    <h1>Список ваших книг</h1>
+    <table id="booksTable">
+        <tr>
+            <th>Название</th>
+            <th>Текст</th>
+        </tr>
+    </table>
+    <script>
+        const booksList = <?php echo json_encode($data ?? array(), JSON_UNESCAPED_UNICODE); ?>;
+        const currentUser = <?php echo json_encode($_SESSION['login'] ?? '', JSON_UNESCAPED_UNICODE); ?>;
+    </script>
+    <script>
+        const table = document.getElementById('booksTable');
+
+        if (booksList.length > 0) {
+            booksList.forEach(book => {
+                const row = document.createElement('tr');
+
+                const cellName = document.createElement('td');
+                cellName.textContent = book.name;
+                row.appendChild(cellName);
+
+                const cellText = document.createElement('td');
+                cellText.textContent = book.text;
+                row.appendChild(cellText);
+                
+                table.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 3;
+            cell.textContent = 'У вас нету добавлененных книг';
+            cell.style.textAlign = 'center';
+            row.appendChild(cell);
+            table.appendChild(row);
+        }
+    </script>
+    
+    <form method="POST" action="my_book.php" id="together_delete_book">
+        <div class="form-group">
+            <label for="delete_book"><h2>Введите название книги для удаления из вашей библиотеке</h2></label>
+            <input type="text" id="delete_book" name="delete_book" required>
+        </div>
+
+        <button type="submit" id="delete_book_btn">Удалить</button>
+    </form>
+    
+
+
+    
+</body>
+</html>

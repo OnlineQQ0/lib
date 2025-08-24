@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список книг</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 50px auto; 
+            padding: 20px; 
+            position: relative; 
+            min-height: 100vh; 
+            background-color: #f9f9f9; 
+            color: #333; 
+            text-align: center;
+        }
+        
+        h1, h2 { 
+            color: #007cba; 
+        }
+        
+        .back-btn {
+            padding: 10px 18px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #444;
+        }
+        
+        button { 
+            padding: 12px 20px; 
+            background: #007cba; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 500; 
+            transition: background 0.3s; 
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background: #005f8a;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #eef7fa;
+            font-weight: bold;
+        }
+        
+        label {
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 500; 
+            color: #444; 
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        form {
+            margin-top: 40px; 
+        }
+        
+        input[type="text"] {
+            width: 80%; 
+            padding: 12px; 
+            margin: 5px 0 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+            text-align: center; 
+        }
+        
+        .center-block {
+            width: 90%; 
+            margin: 0 auto;
+        }
+        
+        textarea {
+            width: 100%; 
+            padding: 12px; 
+            margin: 5px 0 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+            text-align: left; 
+            resize: vertical; 
+            min-height: 100px; 
+            font-family: Arial, sans-serif; 
+            line-height: 1.4;
+            background-color: white;
+            display: block;
+        }
+        
+        textarea:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #007cba;
+            box-shadow: 0 0 5px rgba(0, 124, 186, 0.2);
+        }
+        
+        .user-highlight {
+            color: green;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+    </style>
+</head>
+<body>
+
+
+    <button class="back-btn" onclick="window.location.href='main.php'">Вернуться</button>
+    
+    <div class="section">
+        <h1>Список пользовательских книг</h1>
+        
+        <table id="booksTable">
+            <tr>
+                <th>Логин</th>
+                <th>Название</th>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        const bookList = <?php echo json_encode($data ?? array(), JSON_UNESCAPED_UNICODE); ?>;
+        const currentUser = <?php echo json_encode($_SESSION['login'] ?? '', JSON_UNESCAPED_UNICODE); ?>;
+    </script>
+    
+    <script>
+        const table = document.getElementById('booksTable');
+        
+        if (bookList && bookList.length > 0) {
+            bookList.forEach(book => {
+                const row = document.createElement('tr');
+                
+                const cellLogin = document.createElement('td');
+                
+                cellLogin.textContent = book.login_author || book.login || 'Неизвестный автор';
+                row.appendChild(cellLogin);
+                
+                const cellBook = document.createElement('td');
+                
+                
+                const userLogin = book.login_author || book.login;
+                if (userLogin === currentUser) {
+                    cellBook.innerHTML = `<strong>${book.name}</strong> <span class="user-highlight">(это ваша книга)</span>`;
+                } else {
+                    cellBook.textContent = book.name;
+                }
+                row.appendChild(cellBook);
+                
+                table.appendChild(row);
+            });
+        } else {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 2;
+            cell.textContent = 'Нет пользовательских книг';
+            cell.style.textAlign = 'center';
+            row.appendChild(cell);
+            table.appendChild(row);
+        }
+    </script>
+    
+    <div class="section">
+        <form method="POST" action="book_list.php" id="together_add_book">
+            <div class="form-group">
+                <label for="add_book_name"><h2>Введите название книги для добавления</h2></label>
+                <input type="text" id="add_book_name" name="add_book_name" required>
+                
+                <label for="add_book_text"><h2>Введите текст</h2></label>
+                <div class="center-block">
+                    <textarea 
+                        id="add_book_text" 
+                        name="add_book_text" 
+                        placeholder="Введите текст книги (выравнивание по левому краю)">
+                    </textarea>
+                </div>
+            </div>
+            <button type="submit" id="add_book">Добавить</button>
+        </form>
+    </div>
+
+    <h2>Добавить книгу в свою библиотеке</h2>
+    <div class="section">
+        <form method="POST" action="book_list.php" id="together_add_my_book">
+            <div class="form-group">
+                <label for="my_login_book"><h2>Введите логин автора книги</h2></label>
+                <input type="text" id="my_login_book" name="my_login_book" required>
+                <label for="my_name_book"><h2>Введите название книги</h2></label>
+                <input type="text" id="my_name_book" name="my_name_book" required>
+            </div>
+            <button type="submit" id="my_add_book">Добавить</button>
+        </form>
+    </div>
+
+    <h2>Удалить свою книгу</h2>
+    <div class="section">
+        <form method="POST" action="book_list.php" id="together_delete_book">
+            <div class="form-group">
+                <label for="delete_book"><h2>Введите название книги для удаления</h2></label>
+                <h3>(удалить можно только свои книги)</h3>
+                <input type="text" id="delete_book_name" name="delete_book" required>
+            </div>
+            <button type="submit" id="delete_book">Удалить</button>
+        </form>
+    </div>
+</body>
+</html>
